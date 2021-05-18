@@ -80,7 +80,6 @@ void getBlackLines(char* convertedString, int n, int arr[n]){
             {
                 char currChar = '0';
                 convertedString[symbolsCnt] = currChar;
-                // strncat(convertedString, &currChar, 1);
                 symbolsCnt++;
                 break;
             }
@@ -90,15 +89,12 @@ void getBlackLines(char* convertedString, int n, int arr[n]){
                 i++;
                 convertedString[symbolsCnt] = currChar;
                 symbolsCnt++;
-                // strncat(convertedString, &currChar, 1);
             }
             else{
                 char currChar = '0';
                 convertedString[symbolsCnt] = currChar;
                 symbolsCnt++;
-                // strncat(convertedString, &currChar, 1);
             }
-            //printf("%s\n",convertedString);
         }       
     }
     convertedString[symbolsCnt] = '\0';
@@ -115,11 +111,12 @@ void getBracodeDecimal(char* barcodeDecimal, char* convertedString){
         if(singlePieceIndex == 4){
             singlePiece[singlePieceIndex] = convertedString[index];
             char currChar = getConvertedNumber(singlePiece);
-            barcodeDecimal[barcodeDecimalIndex] = currChar;
-            barcodeDecimalIndex++;
-            singlePieceIndex = 0;
-            index++;
-            continue;
+                barcodeDecimal[barcodeDecimalIndex] = currChar;
+                barcodeDecimalIndex++;
+                singlePieceIndex = 0;
+                index++;
+                continue;
+            
         }
         singlePiece[singlePieceIndex] = convertedString[index];
         singlePieceIndex++;
@@ -133,7 +130,7 @@ int main() {
     printf("enter n\n");
     scanf("%d",&n);
     int* arr = malloc(n * sizeof(int));
-    initInputArray(n, arr);
+    initInputArray(n, arr);  
 
     char* convertedString = malloc(200);
     getBlackLines(convertedString, n, arr);
