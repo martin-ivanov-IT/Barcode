@@ -104,6 +104,30 @@ void getBlackLines(char* convertedString, int n, int arr[n]){
     convertedString[symbolsCnt] = '\0';
 
 }
+
+void getBracodeDecimal(char* barcodeDecimal, char* convertedString){
+    char singlePiece[5];
+    int singlePieceIndex = 0;
+    int index = 0;
+    int barcodeDecimalIndex = 0;
+    while (convertedString[index] != '\0' )
+    {
+        if(singlePieceIndex == 4){
+            singlePiece[singlePieceIndex] = convertedString[index];
+            char currChar = getConvertedNumber(singlePiece);
+            barcodeDecimal[barcodeDecimalIndex] = currChar;
+            barcodeDecimalIndex++;
+            singlePieceIndex = 0;
+            index++;
+            continue;
+        }
+        singlePiece[singlePieceIndex] = convertedString[index];
+        singlePieceIndex++;
+        index++;
+    }
+    barcodeDecimal[barcodeDecimalIndex] = '\0';
+}
+
 int main() {
     int n;
     printf("enter n\n");
@@ -113,48 +137,11 @@ int main() {
 
     char* convertedString = malloc(200);
     getBlackLines(convertedString, n, arr);
-
-    char singlePiece[5];
-    int singlePieceIndex = 0;
-    char barcodeDecimal[100];
-    int index = 0;
-    int barcodeDecimalIndex = 0;
     printf("%s\n",convertedString);
-    while (convertedString[index] != '\0' )
-    {
-        if(singlePieceIndex == 5){
-            char currChar = getConvertedNumber(singlePiece);
-            printf("%c ",currChar);
-            barcodeDecimal[barcodeDecimalIndex] = currChar;
-            barcodeDecimalIndex++;
-            singlePieceIndex = 0;
-        }
-        singlePiece[singlePieceIndex] = convertedString[index];
-        singlePieceIndex++;
-        index++;
-    }
-    barcodeDecimal[barcodeDecimalIndex] = '\0';
-    printf("%s\n",barcodeDecimal);
+
+    char barcodeDecimal[100];
+    getBracodeDecimal(barcodeDecimal, convertedString);
     printf("%s\n",barcodeDecimal);
     
-   
-
-
-    
- 
-
   return EXIT_SUCCESS;
 }
-
-
-        // if (currSinglePieceIndex == 5)
-        // {
-        //     //printf("%s\n",singlePiece);
-        //     char currChar = getConvertedNumber(singlePiece);
-        //     printf("%c ",currChar);
-        //     strncat(convertedString, &currChar, 1);
-        //     currSinglePieceIndex = 0;
-        // }
-
-        // singlePiece[currSinglePieceIndex] = arr[i]+48;
-        // currSinglePieceIndex++;
