@@ -3,43 +3,6 @@
 #include <stdbool.h>
 #include <string.h>
 
-int readNextNumber(FILE* file, bool* isEof){
-    
-    char str[1000];
-    int i = 0;
-    char c = fgetc(file);
-    while (c!=' ' && c!='\n')
-    {
-        if(feof(file) ){
-            str[i++] = c;
-            str[i] = '\0';
-            *isEof = true;
-            return atoi(str);
-        }
-
-        str[i++] = c;
-        c = fgetc(file);
-        
- 
-    }
-    str[i] = '\0';
-
-    return atoi(str);
-    
-}
-
-void readData(FILE* file, int n, int array[n]){
-    bool isEof = false;
-    int index = 0;
-    int num = readNextNumber(file, &isEof);
-    while (!isEof)
-    {
-        array[index] = num;
-        num = readNextNumber(file, &isEof);
-        index++;
-    }
-    
-}
 char getConvertedNumber(char binDigit[5]){
     if(!strncmp(binDigit,"00001",5)){
         return '0';
@@ -78,58 +41,120 @@ char getConvertedNumber(char binDigit[5]){
         return 's';
     }
 }
-void convertInput(char* convertedValue, int n, int arr[n]){
-    char binDigigt[5];
-    int numbers[n];
-    int indexbinDigigt = 0;
-    int convertedValueIndex = 0;
+
+void initInputArray(int n, int arr[n]){
     for (int i = 0; i < n; i++)
     {
-        if(arr[i] == 1){
-            continue;
+        int num;
+        char temp;
+        bool afterComma = false;
+        scanf("%d",&num);
+        scanf("%c",&temp);
+        while ( temp != 32 && temp != 10 && temp != 46)
+        {
+            scanf("%d",&temp);
         }
 
-        else if(arr[i] == 0){
-            if(i == n-1 || arr[i+1] == 0){
-                binDigigt[indexbinDigigt] = '1';
-                indexbinDigigt++;
-            }
-            else if (arr[i+1] ==1){
-                binDigigt[indexbinDigigt] = '0';
-                indexbinDigigt++;
-            }
-
-            if(indexbinDigigt == 5){
-                convertedValue[convertedValueIndex] = getConvertedNumber(binDigigt);
-                convertedValueIndex++;
-                indexbinDigigt++;
+        if (temp == 46)
+        {
+            scanf("%c",&temp);
+            num = temp - 48;
+            num = num<5 ? 0 : 1;
+            while ( temp != 32 && temp != 10)
+            {
+                scanf("%c",&temp);
             }
             
         }
-        convertedValue[convertedValueIndex] = '\0';
-
+         
+        arr[i] = num;
     }
-    
 }
+void getBlackLines(char* convertedString, int n, int arr[n]){
+    int symbolsCnt = 0;
+    for (int i = 0; i < n; i++)
+    {
+        if(arr[i] == 0){
+            
+            if (i == n-1)
+            {
+                char currChar = '0';
+                convertedString[symbolsCnt] = currChar;
+                // strncat(convertedString, &currChar, 1);
+                symbolsCnt++;
+                break;
+            }
 
-int main() {
-    FILE *dataPtr = NULL;
-    char* INPUT = "INPUT.txt";
-    dataPtr = fopen (INPUT, "r");
-    if(dataPtr==NULL){
-        printf("Failed to open %s.\n",INPUT);
+            if(arr[i+1] == 0){
+                char currChar = '1';
+                i++;
+                convertedString[symbolsCnt] = currChar;
+                symbolsCnt++;
+                // strncat(convertedString, &currChar, 1);
+            }
+            else{
+                char currChar = '0';
+                convertedString[symbolsCnt] = currChar;
+                symbolsCnt++;
+                // strncat(convertedString, &currChar, 1);
+            }
+            //printf("%s\n",convertedString);
+        }       
     }
+    convertedString[symbolsCnt] = '\0';
 
+}
+int main() {
     int n;
-    n = readNextNumber(dataPtr,false);
-    printf("%d\n",n);
+    printf("enter n\n");
+    scanf("%d",&n);
     int* arr = malloc(n * sizeof(int));
-    readData(dataPtr, n, arr);
-    char* convertedValue = malloc(n);
-    convertInput(convertedValue, n, arr);
-    printf("%s\n",convertedValue);
+    initInputArray(n, arr);
+
+    char* convertedString = malloc(200);
+    getBlackLines(convertedString, n, arr);
+
+    char singlePiece[5];
+    int singlePieceIndex = 0;
+    char barcodeDecimal[100];
+    int index = 0;
+    int barcodeDecimalIndex = 0;
+    printf("%s\n",convertedString);
+    while (convertedString[index] != '\0' )
+    {
+        if(singlePieceIndex == 5){
+            char currChar = getConvertedNumber(singlePiece);
+            printf("%c ",currChar);
+            barcodeDecimal[barcodeDecimalIndex] = currChar;
+            barcodeDecimalIndex++;
+            singlePieceIndex = 0;
+        }
+        singlePiece[singlePieceIndex] = convertedString[index];
+        singlePieceIndex++;
+        index++;
+    }
+    barcodeDecimal[barcodeDecimalIndex] = '\0';
+    printf("%s\n",barcodeDecimal);
+    printf("%s\n",barcodeDecimal);
+    
+   
+
+
     
  
 
   return EXIT_SUCCESS;
 }
+
+
+        // if (currSinglePieceIndex == 5)
+        // {
+        //     //printf("%s\n",singlePiece);
+        //     char currChar = getConvertedNumber(singlePiece);
+        //     printf("%c ",currChar);
+        //     strncat(convertedString, &currChar, 1);
+        //     currSinglePieceIndex = 0;
+        // }
+
+        // singlePiece[currSinglePieceIndex] = arr[i]+48;
+        // currSinglePieceIndex++;
