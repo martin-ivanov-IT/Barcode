@@ -85,7 +85,7 @@ void initInputArray(int n, int arr[n]){
         arr[i] = num;
     }
 }
-void getBlackLines(char* convertedString, int n, int arr[n]){
+void fetchData(char* convertedString, int n, int arr[n]){
     int symbolsCnt = 0;
     for (int i = 0; i < n; i++)
     {
@@ -126,7 +126,7 @@ int getStart(char* convertedString){
     return -1;   
 }
 
-int getStartFromEnd(char* convertedString){
+int getEnd(char* convertedString){
     int end = strlen(convertedString)-1;
     int start = getStart(convertedString);
     for (int i = end; i >= start; i--){
@@ -138,29 +138,15 @@ int getStartFromEnd(char* convertedString){
             }
         }
     }
-    return -1;
-
-    // int index = getStart(convertedString);
-    // while (convertedString[index] != '\0')
-    // {
-    //     if(convertedString[index] == '0'){
-    //         char currString[6] = {convertedString[index], convertedString[index+1], convertedString[index+2], convertedString[index+3], convertedString[index+4]};
-    //         currString[5] = '\0';
-    //         if(!strcmp(currString, "00110")){
-    //             return index + 5;
-    //         }
-    //     }
-    //     index++;
-    // }
-    // return -1;  
+    return -1;  
 }
     
 
-int getBracodeDecimal(char* barcodeDecimal, char* convertedString){
+int encodeBarcode(char* barcodeDecimal, char* convertedString){
     char singlePiece[5];
     int singlePieceIndex = 0;
     int index = getStart(convertedString);
-    int end = getStartFromEnd(convertedString);
+    int end = getEnd(convertedString);
     int barcodeDecimalIndex = 0;
     while (index <= end )
     {
@@ -187,7 +173,7 @@ int getBracodeDecimal(char* barcodeDecimal, char* convertedString){
     return 0;
 }
 
-int firstFormula(int n, int arr[n]){
+int calcK(int n, int arr[n]){
     int rez = 0;
     for(int i = 1; i <= n; i++){
       rez += (((n-i)%10 + 1) * arr[i-1]);
@@ -196,7 +182,7 @@ int firstFormula(int n, int arr[n]){
     return rez;
 }
 
-int secondFormula (int n, int arr[n]){
+int calcC (int n, int arr[n]){
     int rez = 0;   
     for(int i = 1; i <= n + 1; i++){
       rez += (((n - i +1 ) % 9 + 1) * arr[i-1]);
@@ -212,6 +198,38 @@ int encodeToNumeric(char c){
     }
     return c - '0';
 }
+void scanFetchedData(char* convertedString, char* barcodeDecimal){
+    if(getStart(convertedString) == -1 || getEnd(convertedString) == -1 || encodeBarcode(barcodeDecimal, convertedString)){
+        printf("scanning forward unsuccessful!\n");
+        printf("scanning reversed...\n");
+        char reversedConvertedString[200];
+        strcpy(reversedConvertedString, convertedString);
+        strrev(reversedConvertedString);
+        printf("start reversed: %d\n", (getStart(reversedConvertedString)));
+        printf("end reversed: %d\n", (getEnd(reversedConvertedString)));
+        printf("print reversed: %s\n",reversedConvertedString);
+
+            if(getStart(reversedConvertedString) == -1){  
+                fprintf(stderr,"Barcode truncated. Move the scanner to the right.\n");
+                exit(EXIT_FAILURE);
+            }
+
+            else if(getEnd(reversedConvertedString) == -1){     
+                fprintf(stderr,"Barcode truncated. Move the scanner to the left.\n");
+                exit(EXIT_FAILURE);
+            }
+
+            else if(encodeBarcode(barcodeDecimal, reversedConvertedString)){
+                fprintf(stderr,"invalid input\n");
+                exit(EXIT_FAILURE);
+            }
+
+        strcpy(convertedString, reversedConvertedString);
+    }
+    encodeBarcode(barcodeDecimal, convertedString);
+}
+
+
 
 int main() {
     int n;
@@ -220,39 +238,12 @@ int main() {
     int* arr = malloc(n * sizeof(int));
     initInputArray(n, arr);  
     char convertedString[200];
-    getBlackLines(convertedString, n, arr);
+    fetchData(convertedString, n, arr);
     printf("%s\n",convertedString);
     char barcodeDecimal[100];
     printf("start : %d\n", (getStart(convertedString)));
-    printf("end : %d\n", (getStartFromEnd(convertedString)));
-    if(getStart(convertedString) == -1 || getStartFromEnd(convertedString) == -1 || getBracodeDecimal(barcodeDecimal, convertedString)){
-        printf("scanning forward unsuccessful!\n");
-        printf("scanning reversed...\n");
-        char reversedConvertedString[200];
-        strcpy(reversedConvertedString, convertedString);
-        strrev(reversedConvertedString);
-        printf("start reversed: %d\n", (getStart(reversedConvertedString)));
-        printf("end reversed: %d\n", (getStartFromEnd(reversedConvertedString)));
-        printf("print reversed: %s\n",reversedConvertedString);
-
-            if(getStart(reversedConvertedString) == -1){  
-                fprintf(stderr,"Barcode truncated. Move the scanner to the right.\n");
-            }
-
-            else if(getStartFromEnd(reversedConvertedString) == -1){     
-                fprintf(stderr,"Barcode truncated. Move the scanner to the left.\n");
-            }
-
-            else if(getBracodeDecimal(barcodeDecimal, reversedConvertedString)){
-                fprintf(stderr,"invalid input\n");
-            }
-
-           
-                
-        strcpy(convertedString, reversedConvertedString);
-    }
-
-    getBracodeDecimal(barcodeDecimal, convertedString);
+    printf("end : %d\n", (getEnd(convertedString)));
+    scanFetchedData(convertedString, barcodeDecimal);
 
     int barcodeDecimalLenght= strlen(barcodeDecimal);
     int C = barcodeDecimal[barcodeDecimalLenght-1] - '0';
@@ -265,10 +256,10 @@ int main() {
         digs[i] = encodeToNumeric(barcodeDecimal[i]);
     }
 
-    int KCheck = firstFormula(digsSize-1, digs);
+    int KCheck = calcK(digsSize-1, digs);
     digs[digsSize-1] = encodeToNumeric(barcodeDecimal[digsSize-1]);
     
-    int CCheck = secondFormula(digsSize-1,digs);
+    int CCheck = calcC(digsSize-1,digs);
 
     printf("%s\n",barcodeDecimal);
 
