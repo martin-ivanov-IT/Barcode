@@ -152,7 +152,6 @@ int encodeBarcode(char* barcodeDecimal, char* convertedString){
     {
         if(singlePieceIndex == 4){
             singlePiece[singlePieceIndex] = convertedString[index];
-            // printf("SP %s\n",singlePiece);
             char currChar = getConvertedNumber(singlePiece);
             if(currChar == 'f'){
                 return 1;
@@ -198,6 +197,7 @@ int encodeToNumeric(char c){
     }
     return c - '0';
 }
+
 void scanFetchedData(char* convertedString, char* barcodeDecimal){
     if(getStart(convertedString) == -1 || getEnd(convertedString) == -1 || encodeBarcode(barcodeDecimal, convertedString)){
         printf("scanning forward unsuccessful!\n");
@@ -226,25 +226,9 @@ void scanFetchedData(char* convertedString, char* barcodeDecimal){
 
         strcpy(convertedString, reversedConvertedString);
     }
-    encodeBarcode(barcodeDecimal, convertedString);
 }
 
-
-
-int main() {
-    int n;
-    printf("enter n\n");
-    scanf("%d",&n);
-    int* arr = malloc(n * sizeof(int));
-    initInputArray(n, arr);  
-    char convertedString[200];
-    fetchData(convertedString, n, arr);
-    printf("%s\n",convertedString);
-    char barcodeDecimal[100];
-    printf("start : %d\n", (getStart(convertedString)));
-    printf("end : %d\n", (getEnd(convertedString)));
-    scanFetchedData(convertedString, barcodeDecimal);
-
+bool validateBarcode(char* barcodeDecimal){
     int barcodeDecimalLenght= strlen(barcodeDecimal);
     int C = barcodeDecimal[barcodeDecimalLenght-1] - '0';
     int K = barcodeDecimal[barcodeDecimalLenght-2] - '0';
@@ -260,19 +244,38 @@ int main() {
     digs[digsSize-1] = encodeToNumeric(barcodeDecimal[digsSize-1]);
     
     int CCheck = calcC(digsSize-1,digs);
+    if(K == KCheck && C == CCheck){
+        return true;
+    }
+    return false;
+}
 
+int main() {
+    int n;
+    printf("enter n\n");
+    scanf("%d",&n);
+    int* arr = malloc(n * sizeof(int));
+    initInputArray(n, arr);  
+    char convertedString[200];
+    fetchData(convertedString, n, arr);
+    printf("%s\n",convertedString);
+    char barcodeDecimal[100];
+    printf("start : %d\n", (getStart(convertedString)));
+    printf("end : %d\n", (getEnd(convertedString)));
+    scanFetchedData(convertedString, barcodeDecimal);
+    encodeBarcode(barcodeDecimal, convertedString);
     printf("%s\n",barcodeDecimal);
 
-    if(K == KCheck && C == CCheck){
+    if(validateBarcode(barcodeDecimal)){
         printf("The barcode is valid:\n");
-        for (int i = 0; i < barcodeDecimalLenght-2; i++)
+        for (int i = 0; i < strlen(barcodeDecimal)-2; i++)
         {
            printf("%c",barcodeDecimal[i]);
         }    
     }
     else{
-        printf("invalid barcode because formulas");
+        printf("invalid barcode validation unsuccessful");
     }
-    
+
   return EXIT_SUCCESS;
 }
