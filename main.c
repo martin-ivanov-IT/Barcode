@@ -4,6 +4,19 @@
 #include <string.h>
 
 char getConvertedNumber(char binDigit[5]){
+    // const char* arr[][12]={
+    //     {"00001","10001","01001","11001","00101","10100","01100","00011","10010","1000","00100","00110"},
+    //     {"0","1","2","3","4","5","6","7","8","9","-","s"}
+    // };
+    //     for(int i=0;;i++){
+    //         if(!strncmp(binDigit,arr[0][i],5)){
+    //             return *arr[1][i];
+    //             break;
+    //         }
+    //     }
+        
+    //     return 'f';
+    // }
     if(!strncmp(binDigit,"00001",5)){
         return '0';
     }
@@ -115,7 +128,8 @@ int getStart(char* convertedString){
 
 int getStartFromEnd(char* convertedString){
     int end = strlen(convertedString)-1;
-    for (int i = end; i >= 0; i--){
+    int start = getStart(convertedString);
+    for (int i = end; i >= start; i--){
         if(convertedString[i] == '0'){
             char currString[6] = {convertedString[i], convertedString[i-1], convertedString[i-2], convertedString[i-3], convertedString[i-4]};
             currString[5] = '\0';
@@ -125,6 +139,20 @@ int getStartFromEnd(char* convertedString){
         }
     }
     return -1;
+
+    // int index = getStart(convertedString);
+    // while (convertedString[index] != '\0')
+    // {
+    //     if(convertedString[index] == '0'){
+    //         char currString[6] = {convertedString[index], convertedString[index+1], convertedString[index+2], convertedString[index+3], convertedString[index+4]};
+    //         currString[5] = '\0';
+    //         if(!strcmp(currString, "00110")){
+    //             return index + 5;
+    //         }
+    //     }
+    //     index++;
+    // }
+    // return -1;  
 }
     
 
@@ -195,26 +223,32 @@ int main() {
     getBlackLines(convertedString, n, arr);
     printf("%s\n",convertedString);
     char barcodeDecimal[100];
+    printf("start : %d\n", (getStart(convertedString)));
+    printf("end : %d\n", (getStartFromEnd(convertedString)));
     if(getStart(convertedString) == -1 || getStartFromEnd(convertedString) == -1 || getBracodeDecimal(barcodeDecimal, convertedString)){
         printf("scanning forward unsuccessful!\n");
         printf("scanning reversed...\n");
         char reversedConvertedString[200];
         strcpy(reversedConvertedString, convertedString);
         strrev(reversedConvertedString);
-        if(getStart(reversedConvertedString) == -1 || getStartFromEnd(convertedString) == -1 || getBracodeDecimal(barcodeDecimal, convertedString)){
-            if(getStart(reversedConvertedString) == -1){
+        printf("start reversed: %d\n", (getStart(reversedConvertedString)));
+        printf("end reversed: %d\n", (getStartFromEnd(reversedConvertedString)));
+        printf("print reversed: %s\n",reversedConvertedString);
+
+            if(getStart(reversedConvertedString) == -1){  
                 fprintf(stderr,"Barcode truncated. Move the scanner to the right.\n");
             }
 
-            else if(getStartFromEnd(convertedString) == -1){
+            else if(getStartFromEnd(reversedConvertedString) == -1){     
                 fprintf(stderr,"Barcode truncated. Move the scanner to the left.\n");
             }
-            else{
+
+            else if(getBracodeDecimal(barcodeDecimal, reversedConvertedString)){
                 fprintf(stderr,"invalid input\n");
             }
-     
-            exit(EXIT_FAILURE);
-        }        
+
+           
+                
         strcpy(convertedString, reversedConvertedString);
     }
 
@@ -233,6 +267,7 @@ int main() {
 
     int KCheck = firstFormula(digsSize-1, digs);
     digs[digsSize-1] = encodeToNumeric(barcodeDecimal[digsSize-1]);
+    
     int CCheck = secondFormula(digsSize-1,digs);
 
     printf("%s\n",barcodeDecimal);
@@ -245,7 +280,7 @@ int main() {
         }    
     }
     else{
-        printf("invalid barcode");
+        printf("invalid barcode because formulas");
     }
     
   return EXIT_SUCCESS;
