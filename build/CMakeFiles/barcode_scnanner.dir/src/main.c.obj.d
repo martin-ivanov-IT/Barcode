@@ -24,4 +24,5 @@ CMakeFiles/barcode_scnanner.dir/src/main.c.obj: \
  C:/PROGRA~2/MINGW-~1/I686-8~1.0-P/mingw32/i686-w64-mingw32/include/sec_api/string_s.h \
  H:/C/Repos/Barcode/include/formulas.h \
  H:/C/Repos/Barcode/include/scan_data_funcs.h \
- H:/C/Repos/Barcode/include/encode_funcs.h
+ H:/C/Repos/Barcode/include/encode_funcs.h \
+ H:/C/Repos/Barcode/include/defines.h

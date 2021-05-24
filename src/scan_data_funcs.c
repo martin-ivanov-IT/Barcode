@@ -4,6 +4,7 @@
 
 #include "scan_data_funcs.h"
 #include "encode_funcs.h"
+#include "defines.h"
 
 void initInputArray(int n, int arr[n]){
     for (int i = 0; i < n; i++)
@@ -12,17 +13,17 @@ void initInputArray(int n, int arr[n]){
         char temp;
         scanf("%d",&num);
         scanf("%c",&temp);
-        while ( temp != 32 && temp != 10 && temp != 46)
+        while ( temp != SPACE_ASCII && temp != NEW_LINE_ASCII && temp != DOT_ASCII)
         {
             scanf("%c",&temp);
         }
 
-        if (temp == 46)
+        if (temp == DOT_ASCII)
         {
             scanf("%c",&temp);
-            num = temp - 48;
-            num = num<5 ? 0 : 1;
-            while ( temp != 32 && temp != 10)
+            num = temp - ZERO_ASCII;
+            num = num < 5 ? 0 : 1;
+            while ( temp != SPACE_ASCII && temp != NEW_LINE_ASCII)
             {
                 scanf("%c",&temp);
             }
@@ -64,8 +65,8 @@ int getStart(char* convertedString){
         if(convertedString[index] == '0'){
             char currString[6] = {convertedString[index], convertedString[index+1], convertedString[index+2], convertedString[index+3], convertedString[index+4]};
             currString[5] = '\0';
-            if(!strcmp(currString, "00110")){
-                return index + 5;
+            if(!strcmp(currString, START_STOP_CODE)){
+                return index + BINARY_SYMBOL_LENGHT;
             }
         }
         index++;
@@ -76,23 +77,11 @@ int getStart(char* convertedString){
 int getEnd(char* convertedString){
     int end = strlen(convertedString)-1;
     int start = getStart(convertedString);
-    //starts searching for an end from the end of the string
-    // for (int i = end; i >= start; i--){
-    //     if(convertedString[i] == '0'){
-    //         char currString[6] = {convertedString[i], convertedString[i-1], convertedString[i-2], convertedString[i-3], convertedString[i-4]};
-    //         currString[5] = '\0';
-    //         if(!strcmp(currString, "01100")){
-    //             return i - 5;
-    //         }
-    //     }
-    // }
-
-//starts searching for an end right after start is found
-    for (int i = start; i <= end; i+=5){
-        if(convertedString[i] == '0'){
-            char currString[6] = {convertedString[i], convertedString[i+1], convertedString[i+2], convertedString[i+3], convertedString[i+4]};
-            currString[5] = '\0';
-            if(!strcmp(currString, "00110")){
+    for (int i = start; i <= end; i+=BINARY_SYMBOL_LENGHT){
+        if(convertedString[i] == ZERO_ASCII){
+            char currString[BINARY_SYMBOL_LENGHT+1] = {convertedString[i], convertedString[i+1], convertedString[i+2], convertedString[i+3], convertedString[i+4]};
+            currString[BINARY_SYMBOL_LENGHT] = '\0';
+            if(!strcmp(currString, START_STOP_CODE)){
                 return i;
             }
         }
@@ -104,7 +93,7 @@ void scanFetchedData(char* convertedString, char* barcodeDecimal){
     if(getStart(convertedString) == -1 || getEnd(convertedString) == -1 || encodeBarcode(barcodeDecimal, convertedString)){
         printf("scanning forward unsuccessful!\n");
         printf("scanning reversed...\n");
-        char reversedConvertedString[200];
+        char reversedConvertedString[STRING_SIZE];
         strcpy(reversedConvertedString, convertedString);
         strrev(reversedConvertedString);
         printf("start reversed: %d\n", (getStart(reversedConvertedString)));

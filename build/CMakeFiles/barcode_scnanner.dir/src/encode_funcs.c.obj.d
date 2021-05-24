@@ -16,6 +16,13 @@ CMakeFiles/barcode_scnanner.dir/src/encode_funcs.c.obj: \
  C:/PROGRA~2/MINGW-~1/I686-8~1.0-P/mingw32/i686-w64-mingw32/include/malloc.h \
  C:/PROGRA~2/MINGW-~1/I686-8~1.0-P/mingw32/i686-w64-mingw32/include/string.h \
  C:/PROGRA~2/MINGW-~1/I686-8~1.0-P/mingw32/i686-w64-mingw32/include/sec_api/string_s.h \
+ C:/PROGRA~2/MINGW-~1/I686-8~1.0-P/mingw32/i686-w64-mingw32/include/stdio.h \
+ C:/PROGRA~2/MINGW-~1/I686-8~1.0-P/mingw32/i686-w64-mingw32/include/_mingw_print_push.h \
+ C:/PROGRA~2/MINGW-~1/I686-8~1.0-P/mingw32/i686-w64-mingw32/include/_mingw_off_t.h \
+ C:/PROGRA~2/MINGW-~1/I686-8~1.0-P/mingw32/i686-w64-mingw32/include/swprintf.inl \
+ C:/PROGRA~2/MINGW-~1/I686-8~1.0-P/mingw32/i686-w64-mingw32/include/sec_api/stdio_s.h \
+ C:/PROGRA~2/MINGW-~1/I686-8~1.0-P/mingw32/i686-w64-mingw32/include/_mingw_print_pop.h \
  H:/C/Repos/Barcode/include/encode_funcs.h \
  H:/C/Repos/Barcode/include/scan_data_funcs.h \
- H:/C/Repos/Barcode/include/formulas.h
+ H:/C/Repos/Barcode/include/formulas.h \
+ H:/C/Repos/Barcode/include/defines.h

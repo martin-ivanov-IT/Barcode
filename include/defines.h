@@ -1,0 +1,25 @@
+#define STRING_SIZE 200
+#define CONTROL_SYMBOLS_COUNT 2
+#define SPACE_ASCII 32
+#define NEW_LINE_ASCII 10
+#define DOT_ASCII 46
+#define ZERO_ASCII 48
+#define DASH_ASCII 45
+
+#define BINARY_SYMBOL_LENGHT 5
+
+#define ZERO_CODE "00001"
+#define ONE_CODE "10001"
+#define TWO_CODE "01001"
+#define THREE_CODE "11001"
+#define FOUR_CODE "00101"
+#define FIVE_CODE "10100"
+#define SIX_CODE "01100"
+#define SEVEN_CODE "00011"
+#define EIGHT_CODE "10010"
+#define NINE_CODE "10000"
+#define TEN_DASH_CODE "00100"
+#define START_STOP_CODE "00110"
+
+#define TEN_DASH_NUMERIC_VALUE 10
+#define  INVALID_CODE_VALUE 'f'
