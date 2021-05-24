@@ -129,12 +129,24 @@ int getStart(char* convertedString){
 int getEnd(char* convertedString){
     int end = strlen(convertedString)-1;
     int start = getStart(convertedString);
-    for (int i = end; i >= start; i--){
+    //starts searching for an end from the end of the string
+    // for (int i = end; i >= start; i--){
+    //     if(convertedString[i] == '0'){
+    //         char currString[6] = {convertedString[i], convertedString[i-1], convertedString[i-2], convertedString[i-3], convertedString[i-4]};
+    //         currString[5] = '\0';
+    //         if(!strcmp(currString, "01100")){
+    //             return i - 5;
+    //         }
+    //     }
+    // }
+
+//starts searching for an end right after start is found
+    for (int i = start; i <= end; i+=5){
         if(convertedString[i] == '0'){
-            char currString[6] = {convertedString[i], convertedString[i-1], convertedString[i-2], convertedString[i-3], convertedString[i-4]};
+            char currString[6] = {convertedString[i], convertedString[i+1], convertedString[i+2], convertedString[i+3], convertedString[i+4]};
             currString[5] = '\0';
-            if(!strcmp(currString, "01100")){
-                return i - 5;
+            if(!strcmp(currString, "00110")){
+                return i;
             }
         }
     }
@@ -258,13 +270,13 @@ int main() {
     initInputArray(n, arr);  
     char convertedString[200];
     fetchData(convertedString, n, arr);
-    printf("%s\n",convertedString);
+    printf("%s\n",convertedString);//remove me
     char barcodeDecimal[100];
-    printf("start : %d\n", (getStart(convertedString)));
-    printf("end : %d\n", (getEnd(convertedString)));
+    printf("start : %d\n", (getStart(convertedString)));//remove me
+    printf("end : %d\n", (getEnd(convertedString)));//remove me
     scanFetchedData(convertedString, barcodeDecimal);
     encodeBarcode(barcodeDecimal, convertedString);
-    printf("%s\n",barcodeDecimal);
+    printf("%s\n",barcodeDecimal);//remove me
 
     if(validateBarcode(barcodeDecimal)){
         printf("The barcode is valid:\n");
@@ -276,6 +288,6 @@ int main() {
     else{
         printf("invalid barcode validation unsuccessful");
     }
-
+    
   return EXIT_SUCCESS;
 }
