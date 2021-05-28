@@ -96,9 +96,6 @@ void scanFetchedData(char* convertedString, char* barcodeDecimal){
         char reversedConvertedString[STRING_SIZE];
         strcpy(reversedConvertedString, convertedString);
         strrev(reversedConvertedString);
-        printf("start reversed: %d\n", (getStart(reversedConvertedString)));
-        printf("end reversed: %d\n", (getEnd(reversedConvertedString)));
-        printf("print reversed: %s\n",reversedConvertedString);
 
             if(getStart(reversedConvertedString) == -1){  
                 fprintf(stderr,"Barcode truncated. Move the scanner to the right.\n");
